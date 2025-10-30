@@ -1,4 +1,4 @@
-import { component$, Slot, $ } from "@builder.io/qwik";
+import { component$, Slot, $, useVisibleTask$ } from "@builder.io/qwik";
 import type { RequestHandler } from "@builder.io/qwik-city";
 import { TopBar } from "~/components/TopBar";
 import { appShellClasses } from "~/lib/theme";
@@ -26,6 +26,29 @@ export default component$(() => {
   // Consume notes state/actions
   const { state } = useNotes();
 
+  // Bridge for child components emitting DOM events (keeps QRLs clean)
+  useVisibleTask$(() => {
+    const handler = (e: Event) => {
+      const anyEvt = e as CustomEvent<{ id: string }>;
+      const id = anyEvt.detail?.id;
+      if (!id) return;
+      const prevSelected = state.selectedId;
+      const actions = getNotesActions();
+      actions
+        .deleteNote(id)
+        .then(() => {
+          if (prevSelected === id) {
+            location.assign("/notes");
+          }
+        })
+        .catch(() => {
+          // Store handles error banner
+        });
+    };
+    document.addEventListener("notes:request-delete", handler);
+    return () => document.removeEventListener("notes:request-delete", handler);
+  });
+
   return (
     <>
       <TopBar />
@@ -37,22 +60,19 @@ export default component$(() => {
                 items={state.notes}
                 onDelete$={$((id: string) => {
                   const prevSelected = state.selectedId;
-                  return getNotesActions()
-                    .deleteNote(id)
-                    .then(() => {
-                      // If the currently viewed note was deleted, go back to the list page
-                      if (prevSelected === id) {
-                        location.assign("/notes");
-                      }
-                    });
+                  const actions = getNotesActions();
+                  return actions.deleteNote(id).then(() => {
+                    if (prevSelected === id) {
+                      location.assign("/notes");
+                    }
+                  });
                 })}
               />
             </div>
           </aside>
           <main class={appShellClasses.main} role="main" aria-live="polite">
             <div style={{ padding: "0.5rem" }}>
-              {state.banner ? (
-                // Lazy import to avoid top-level circular dep; inline markup to keep it simple
+              {state.banner && state.banner.message.trim().length > 0 ? (
                 <div
                   role="status"
                   class={`banner-${state.banner.kind}`}
@@ -75,7 +95,7 @@ export default component$(() => {
                         : "#1e40af",
                   }}
                 >
-                  {state.banner.message}
+                  {state.banner.message.trim()}
                 </div>
               ) : null}
               <Slot />

@@ -51,10 +51,10 @@ export default component$(() => {
                 class={buttonClasses("secondary")}
                 onClick$={$(() => {
                   if (confirm("Delete this note? This cannot be undone.")) {
-                    getNotesActions()
+                    const actions = getNotesActions();
+                    actions
                       .deleteNote(noteId)
                       .then(() => {
-                        // After successful deletion, go back to the list
                         location.assign("/notes");
                       })
                       .catch(() => {

@@ -170,10 +170,10 @@ export const NoteList = component$<NoteListProps>((props) => {
   const currentId = loc.params["id"]; // highlights selection when on /notes/:id
   const sectionTitle = props.title ?? "Notes";
   const createHref = props.createHref ?? "/notes/new";
-  // Hoist a serializable flag to avoid capturing props in QRL closures below
-  const hasDeleteCb = !!props.onDelete$;
+  // Hoist a serializable flag to avoid capturing props function in QRL closures
+  const hasDeleteCb = typeof props.onDelete$ === "function";
 
-  // QRL-wrapped delete handler; keep closure limited to serializable values and signals.
+  // QRL-wrapped delete handler; do not reference props inside the $ closure.
   const requestDelete = $((id: string, title?: string, hasCallback?: boolean) => {
     if (deletingIdSig.value) return;
     const label = title ? `“${title}”` : `#${id}`;
@@ -181,21 +181,26 @@ export const NoteList = component$<NoteListProps>((props) => {
 
     deletingIdSig.value = id;
 
-    // If a callback is expected, schedule it via setTimeout to avoid blocking UI.
+    // Dispatch a DOM event that parent can listen to, avoiding capturing props
     if (hasCallback) {
-      // We cannot capture the function in this closure; instead rely on a global dispatch to inform the component to handle it.
-      // Since we are inside the same component, we can set location hash as a simple signal to trigger refresh or let parent pass real integration later.
-      setTimeout(() => {
-        // Soft fallback behavior: reload with a query to indicate deletion request.
-        const url = new URL(location.href);
-        url.searchParams.set("deleted", id);
-        location.assign(url.toString());
-      }, 0);
+      queueMicrotask(() => {
+        document.dispatchEvent(
+          new CustomEvent("notes:request-delete", {
+            detail: { id },
+          }),
+        );
+        // UI state will be cleared by parent action outcome; also set a timeout fallback
+        setTimeout(() => {
+          if (deletingIdSig.value === id) {
+            deletingIdSig.value = null;
+          }
+        }, 0);
+      });
     } else {
-      // Fallback when no callback provided: same behavior
-      const url = new URL(location.href);
-      url.searchParams.set("deleted", id);
-      location.assign(url.toString());
+      // If no callback exists, just clear the UI state gracefully
+      queueMicrotask(() => {
+        deletingIdSig.value = null;
+      });
     }
   });
 
