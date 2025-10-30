@@ -2,6 +2,7 @@ import { component$, Slot } from "@builder.io/qwik";
 import type { RequestHandler } from "@builder.io/qwik-city";
 import { TopBar } from "~/components/TopBar";
 import { appShellClasses } from "~/lib/theme";
+import { NoteList, type NoteListItem } from "~/components/NoteList";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
   cacheControl({
@@ -13,22 +14,46 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 /**
  * PUBLIC_INTERFACE
  * Root layout for the app. Renders a persistent TopBar and a responsive two-column shell:
- * - Sidebar: reserved for note list/navigation
+ * - Sidebar: renders NoteList for navigation
  * - Main content: <Slot/> for route content
  */
 export default component$(() => {
+  // Temporary mock items until backend/state integration
+  const demoItems: NoteListItem[] = [
+    {
+      id: "1",
+      title: "Welcome to Qwik Notes",
+      content:
+        "This is a demo note. Create, view, and edit notes with a clean sidebar.",
+    },
+    {
+      id: "2",
+      title: "Ocean Professional Theme",
+      content:
+        "Blue primary, amber secondary, subtle shadows, rounded corners and gradients.",
+    },
+    {
+      id: "3",
+      title: "Your next idea",
+      content:
+        "Capture a quick thought. Click a note to view details. Use the ✕ to delete.",
+    },
+  ];
+
   return (
     <>
       <TopBar />
       <div class={`gradient-soft`} style={{ minHeight: "100vh" }}>
         <div class={appShellClasses.shell}>
           <aside class={appShellClasses.sidebar} aria-label="Sidebar">
-            {/* Placeholder for future NoteList component */}
             <div style={{ padding: "0.5rem 0.5rem" }}>
-              <h2 style={{ margin: "0 0 0.5rem 0", fontSize: "0.95rem", color: "var(--color-text-muted)" }}>
-                Notes
-              </h2>
-              <p style="margin:0;color:var(--color-text-muted)">Your notes will appear here.</p>
+              <NoteList
+                items={demoItems}
+                onDelete$={async (id) => {
+                  // For now just log; real implementation will update state or call API.
+                  console.info("Delete requested for note id:", id);
+                }}
+              />
             </div>
           </aside>
           <main class={appShellClasses.main} role="main" aria-live="polite">
