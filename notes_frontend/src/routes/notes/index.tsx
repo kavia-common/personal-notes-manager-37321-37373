@@ -1,25 +1,35 @@
 import { component$ } from "@builder.io/qwik";
 import type { DocumentHead } from "@builder.io/qwik-city";
+import { useNotes } from "~/lib/store";
 
 /**
  * PUBLIC_INTERFACE
  * NotesIndexPage
- * Entry route for listing notes. Placeholder content for now.
+ * Entry route for listing notes.
  */
 export default component$(() => {
+  const { state } = useNotes();
   return (
     <section>
       <header style={{ marginBottom: "0.75rem" }}>
         <h1 style={{ margin: 0 }}>All Notes</h1>
         <p style={{ margin: "0.25rem 0", color: "var(--color-text-muted)" }}>
-          This is a placeholder for the notes list. The sidebar will show navigation items.
+          {state.loading
+            ? "Loading your notes…"
+            : state.notes.length === 0
+            ? "No notes yet. Use + Add Note to create your first note."
+            : "Select a note from the sidebar to view or edit it."}
         </p>
       </header>
 
       <div class="surface" style={{ padding: "1rem" }}>
-        <p style={{ marginTop: 0 }}>
-          Soon this page will render the NoteList in the sidebar and summary/empty state here.
-        </p>
+        {state.error ? (
+          <p style={{ color: "var(--color-error)" }}>{state.error}</p>
+        ) : (
+          <p style={{ marginTop: 0 }}>
+            You currently have <strong>{state.notes.length}</strong> {state.notes.length === 1 ? "note" : "notes"}.
+          </p>
+        )}
       </div>
     </section>
   );
