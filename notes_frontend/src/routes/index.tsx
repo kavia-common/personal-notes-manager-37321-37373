@@ -1,21 +1,30 @@
 import { component$ } from "@builder.io/qwik";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import type { DocumentHead } from "@builder.io/qwik-city";
+
+/**
+ * Redirect to /notes as the app home.
+ */
+export const useRedirect = routeLoader$(({ redirect }) => {
+  throw redirect(302, "/notes");
+});
 
 // PUBLIC_INTERFACE
 export default component$(() => {
+  // Fallback content in case redirect is not immediate
   return (
-    <div class="page-container">
-      <h1 class="main-title">notes_frontend is being generated</h1>
+    <div style="padding:2rem;">
+      <p>Redirecting to notes…</p>
     </div>
   );
 });
 
 export const head: DocumentHead = {
-  title: "notes_frontend",
+  title: "Qwik Notes",
   meta: [
     {
       name: "description",
-      content: "Ultralight Qwik template",
+      content: "Personal notes app",
     },
   ],
 };
