@@ -10,7 +10,7 @@ import { useNotes } from "~/lib/store";
 export default component$(() => {
   const { state } = useNotes();
   return (
-    <section>
+    <section aria-label="Notes overview">
       <header style={{ marginBottom: "0.75rem" }}>
         <h1 style={{ margin: 0 }}>All Notes</h1>
         <p style={{ margin: "0.25rem 0", color: "var(--color-text-muted)" }}>

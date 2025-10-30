@@ -26,10 +26,10 @@ export default component$(() => {
           </p>
         </div>
         <div style={{ display: "flex", gap: "0.5rem" }}>
-          <Link href={`/notes/${noteId}/edit`} class={buttonClasses("primary")}>
+          <Link href={`/notes/${noteId}/edit`} class={buttonClasses("primary")} aria-label="Edit this note">
             Edit
           </Link>
-          <Link href="/notes" class={buttonClasses("secondary")}>
+          <Link href="/notes" class={buttonClasses("secondary")} aria-label="Back to notes">
             Back
           </Link>
         </div>
@@ -49,6 +49,7 @@ export default component$(() => {
               <button
                 type="button"
                 class={buttonClasses("secondary")}
+                aria-label="Delete this note"
                 onClick$={$(() => {
                   if (confirm("Delete this note? This cannot be undone.")) {
                     const actions = getNotesActions();
@@ -75,6 +76,7 @@ export default component$(() => {
             <button
               class={buttonClasses("secondary")}
               type="button"
+              aria-label="Reload notes"
               onClick$={$(() => getNotesActions().loadNotes())}
             >
               Reload notes

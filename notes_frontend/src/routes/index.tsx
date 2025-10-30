@@ -13,7 +13,7 @@ export const useRedirect = routeLoader$(({ redirect }) => {
 export default component$(() => {
   // Fallback content in case redirect is not immediate
   return (
-    <div style="padding:2rem;">
+    <div style="padding:2rem;" role="status" aria-live="polite" aria-label="Redirecting">
       <p>Redirecting to notes…</p>
     </div>
   );

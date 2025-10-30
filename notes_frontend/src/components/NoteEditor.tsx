@@ -182,12 +182,13 @@ export const NoteEditor = component$<NoteEditorProps>((props) => {
           </p>
         </div>
         <div class="toolbar">
-          <Link href={props.onCancelHref} class={buttonClasses("secondary")} aria-label="Cancel and go back">
+          <Link href={props.onCancelHref} class={buttonClasses("secondary")} aria-label="Cancel editing and go back">
             Cancel
           </Link>
           <button
             type="button"
             class={buttonClasses("primary")}
+            aria-label={externalSavingSig.value || savingLocalSig.value ? "Saving note" : submitText}
             disabled={externalSavingSig.value || savingLocalSig.value}
             onClick$={onSubmit$}
             aria-busy={externalSavingSig.value || savingLocalSig.value ? "true" : "false"}
@@ -215,9 +216,11 @@ export const NoteEditor = component$<NoteEditorProps>((props) => {
               value={titleSig.value}
               onChange$={onTitleChange$}
               maxLength={200}
+              aria-invalid={errorTitleSig.value ? "true" : "false"}
+              aria-describedby={errorTitleSig.value ? "note-title-error" : undefined}
               disabled={externalSavingSig.value || savingLocalSig.value}
             />
-            {errorTitleSig.value && <span class="error" role="alert">{errorTitleSig.value}</span>}
+            {errorTitleSig.value && <span id="note-title-error" class="error" role="alert">{errorTitleSig.value}</span>}
           </div>
 
           <div class="row">
@@ -231,9 +234,11 @@ export const NoteEditor = component$<NoteEditorProps>((props) => {
               rows={10}
               value={contentSig.value}
               onChange$={onContentChange$}
+              aria-invalid={errorContentSig.value ? "true" : "false"}
+              aria-describedby={errorContentSig.value ? "note-content-error" : undefined}
               disabled={externalSavingSig.value || savingLocalSig.value}
             />
-            {errorContentSig.value && <span class="error" role="alert">{errorContentSig.value}</span>}
+            {errorContentSig.value && <span id="note-content-error" class="error" role="alert">{errorContentSig.value}</span>}
           </div>
         </form>
       </div>

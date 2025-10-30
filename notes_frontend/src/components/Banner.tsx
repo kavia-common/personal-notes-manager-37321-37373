@@ -47,7 +47,7 @@ export const Banner = component$<BannerProps>(({ kind = "info", message }) => {
   }
   `);
   return (
-    <div role="status" class={`banner ${kind}`}>
+    <div role={kind === "error" ? "alert" : "status"} aria-live={kind === "error" ? "assertive" : "polite"} class={`banner ${kind}`}>
       <span class="dot" aria-hidden="true" />
       <span>{message}</span>
     </div>

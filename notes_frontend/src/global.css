@@ -13,15 +13,19 @@
   --color-text: #111827;
   --color-text-muted: #4b5563;
 
-  --color-primary: #2563eb;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
+  /* Adjusted to ensure excellent contrast (meets WCAG AA/AAA on white and bg) */
+  --color-primary: #1d4ed8;        /* slightly darker than #2563eb */
+  --color-primary-600: #1d4ed8;
+  --color-primary-700: #1e40af;
 
+  /* Secondary on white was borderline for small text; keep button text dark for contrast */
   --color-secondary: #f59e0b;
   --color-secondary-600: #f59e0b;
   --color-secondary-700: #d97706;
 
-  --color-error: #ef4444;
+  /* Error is solid and passes contrast */
+  --color-error: #b91c1c;          /* darker error for stronger contrast on white */
+  --color-error-600: #b91c1c;
 
   /* Effects */
   --radius-sm: 6px;
@@ -32,7 +36,7 @@
   --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.12);
 
-  --focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.35);
+  --focus-ring: 0 0 0 3px rgba(29, 78, 216, 0.45); /* stronger ring for visibility */
 }
 
 html {
@@ -59,6 +63,42 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   line-height: inherit;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus,
+.skip-link:focus-visible {
+  left: 0.75rem;
+  top: 0.75rem;
+  width: auto;
+  height: auto;
+  background: var(--color-primary);
+  color: #ffffff;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+  z-index: 1000;
+}
+
+/* Global focus outlines for interactive elements */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-color: var(--color-primary-600);
 }
 
 * {
@@ -118,11 +158,21 @@ body {
 
 .btn-secondary {
   background: var(--color-secondary);
-  color: #111827;
+  color: #111827; /* dark text on amber for better contrast */
 }
 
 .btn-secondary:hover {
   background: var(--color-secondary-700);
+}
+
+/* Danger button utility */
+.btn-danger {
+  background: var(--color-error-600, var(--color-error));
+  color: #ffffff;
+}
+
+.btn-danger:hover {
+  filter: brightness(0.95);
 }
 
 /* Links */

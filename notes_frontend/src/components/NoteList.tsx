@@ -104,11 +104,11 @@ const styles = `
 
 .btn-icon-danger {
   color: #fff;
-  background: var(--color-error);
+  background: var(--color-error-600, var(--color-error));
   border-color: transparent;
 }
 .btn-icon-danger:hover {
-  background: #dc2626;
+  filter: brightness(0.95);
 }
 
 .empty {
@@ -209,7 +209,7 @@ export const NoteList = component$<NoteListProps>((props) => {
       <div class="section-header">
         <h2 class="section-title">{sectionTitle}</h2>
         <div class="section-actions">
-          <Link href={createHref} aria-label="Create new note">
+          <Link href={createHref} aria-label="Create a new note">
             + New
           </Link>
         </div>
@@ -218,11 +218,11 @@ export const NoteList = component$<NoteListProps>((props) => {
       {items.length === 0 ? (
         <p class="empty">No notes yet. Create your first note to get started.</p>
       ) : (
-        <ul class="note-list" role="list">
+        <ul class="note-list" role="list" aria-label="Notes list">
           {items.map((n) => {
             const selected = currentId === n.id;
             return (
-              <li key={n.id} class={`note-row ${selected ? "selected" : ""}`}>
+              <li key={n.id} class={`note-row ${selected ? "selected" : ""}`} role="listitem" aria-selected={selected ? "true" : "false"}>
                 <Link
                   class="note-link"
                   href={`/notes/${n.id}`}
@@ -243,7 +243,7 @@ export const NoteList = component$<NoteListProps>((props) => {
                   <button
                     type="button"
                     class={`btn-icon btn-icon-danger`}
-                    aria-label={`Delete note ${n.title || n.id}`}
+                    aria-label={deletingIdSig.value === n.id ? "Deleting note…" : `Delete note ${n.title || n.id}`}
                     disabled={deletingIdSig.value === n.id}
                     onClick$={() => requestDelete(n.id, n.title, hasDeleteCb)}
                   >

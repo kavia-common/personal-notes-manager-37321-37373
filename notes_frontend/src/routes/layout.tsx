@@ -51,9 +51,11 @@ export default component$(() => {
 
   return (
     <>
+      {/* Skip to content for keyboard users */}
+      <a href="#main-content" class="skip-link">Skip to main content</a>
       <TopBar />
-      <div class={`gradient-soft`} style={{ minHeight: "100vh" }}>
-        <div class={appShellClasses.shell}>
+      <div class="gradient-soft" style={{ minHeight: "100vh" }}>
+        <div class={appShellClasses.shell} role="application" aria-label="Notes application shell">
           <aside class={appShellClasses.sidebar} aria-label="Sidebar">
             <div style={{ padding: "0.5rem 0.5rem" }}>
               <NoteList
@@ -70,7 +72,7 @@ export default component$(() => {
               />
             </div>
           </aside>
-          <main class={appShellClasses.main} role="main" aria-live="polite">
+          <main id="main-content" class={appShellClasses.main} role="main" aria-live="polite" aria-label="Main content">
             <div style={{ padding: "0.5rem" }}>
               {state.banner && state.banner.message.trim().length > 0 ? (
                 <div

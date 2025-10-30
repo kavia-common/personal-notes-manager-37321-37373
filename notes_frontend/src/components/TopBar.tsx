@@ -17,10 +17,10 @@ export const TopBar = component$(() => {
         </div>
         <div class="actions">
           {/* Placeholder for theme toggle */}
-          <button class={buttonClasses("secondary")} type="button" aria-label="Toggle theme" disabled>
+          <button class={buttonClasses("secondary")} type="button" aria-label="Toggle color theme" disabled>
             Theme
           </button>
-          <Link class={buttonClasses("primary")} href="/notes/new">
+          <Link class={buttonClasses("primary")} href="/notes/new" aria-label="Add a new note">
             + Add Note
           </Link>
         </div>
