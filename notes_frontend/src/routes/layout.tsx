@@ -36,13 +36,48 @@ export default component$(() => {
               <NoteList
                 items={state.notes}
                 onDelete$={$((id: string) => {
-                  return getNotesActions().deleteNote(id);
+                  const prevSelected = state.selectedId;
+                  return getNotesActions()
+                    .deleteNote(id)
+                    .then(() => {
+                      // If the currently viewed note was deleted, go back to the list page
+                      if (prevSelected === id) {
+                        location.assign("/notes");
+                      }
+                    });
                 })}
               />
             </div>
           </aside>
           <main class={appShellClasses.main} role="main" aria-live="polite">
             <div style={{ padding: "0.5rem" }}>
+              {state.banner ? (
+                // Lazy import to avoid top-level circular dep; inline markup to keep it simple
+                <div
+                  role="status"
+                  class={`banner-${state.banner.kind}`}
+                  style={{
+                    borderRadius: "6px",
+                    padding: "0.6rem 0.75rem",
+                    margin: "0 0 0.75rem 0",
+                    border: "1px solid rgba(0,0,0,0.08)",
+                    background:
+                      state.banner.kind === "success"
+                        ? "#ecfdf5"
+                        : state.banner.kind === "error"
+                        ? "#fef2f2"
+                        : "#eff6ff",
+                    color:
+                      state.banner.kind === "success"
+                        ? "#065f46"
+                        : state.banner.kind === "error"
+                        ? "#991b1b"
+                        : "#1e40af",
+                  }}
+                >
+                  {state.banner.message}
+                </div>
+              ) : null}
               <Slot />
             </div>
           </main>

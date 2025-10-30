@@ -136,6 +136,32 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Banner utility in main area (matches Banner.tsx look) */
+.banner-success,
+.banner-error,
+.banner-info {
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.75rem;
+  margin: 0 0 0.75rem 0;
+  border: 1px solid transparent;
+  font-size: 0.92rem;
+}
+.banner-success {
+  background: #ecfdf5;
+  color: #065f46;
+  border-color: rgba(6, 95, 70, 0.25);
+}
+.banner-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: rgba(153, 27, 27, 0.25);
+}
+.banner-info {
+  background: #eff6ff;
+  color: #1e40af;
+  border-color: rgba(30, 64, 175, 0.25);
+}
+
 /* Top bar */
 .topbar {
   position: sticky;

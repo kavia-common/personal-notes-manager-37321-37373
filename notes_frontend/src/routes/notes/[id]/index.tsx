@@ -42,6 +42,30 @@ export default component$(() => {
             <p style={{ color: "var(--color-text-muted)", fontSize: "0.85rem" }}>
               Updated: {new Date(note.updatedAt).toLocaleString()}
             </p>
+            <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+              <Link href={`/notes/${noteId}/edit`} class={buttonClasses("primary")}>
+                Edit
+              </Link>
+              <button
+                type="button"
+                class={buttonClasses("secondary")}
+                onClick$={$(() => {
+                  if (confirm("Delete this note? This cannot be undone.")) {
+                    getNotesActions()
+                      .deleteNote(noteId)
+                      .then(() => {
+                        // After successful deletion, go back to the list
+                        location.assign("/notes");
+                      })
+                      .catch(() => {
+                        // Error banner handled in store
+                      });
+                  }
+                })}
+              >
+                Delete
+              </button>
+            </div>
           </>
         ) : (
           <>

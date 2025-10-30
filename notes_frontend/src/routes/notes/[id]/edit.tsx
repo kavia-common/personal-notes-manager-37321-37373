@@ -26,6 +26,7 @@ export default component$(() => {
       onCancelHref={`/notes/${noteId}`}
       onSave$={$(async (value) => {
         await getNotesActions().updateNote({ id: noteId, title: value.title, content: value.content });
+        // Navigate back to the note after save; banner will show from store
         nav(`/notes/${noteId}`);
       })}
       submitLabel="Save Changes"
